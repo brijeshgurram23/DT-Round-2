@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technical Project Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  
+    <style>
+        
+        #sidebarcollapse.expanded {
+            background-color: rgb(231, 231, 231); 
+            width: 250px; 
+        }
+        #sidebarcollapse {
+            background-color: rgb(231, 231, 231);
+        }
+        #togglekabutton {
+            background-color: black;
+        }
+        .sidebarkacontent {
+            display: none; 
+        }
+        .sidebarkacontent h3{
+            background-color: black;
+            height: 30px;
+            width: 200px;
+            
+        }
+        #sidebarcollapse.expanded .sidebarkacontent {
+            display: block; 
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+<!-- Ye Sidebar Hai -->
+<aside id="sidebarcollapse" class="fixed left- top-0 h-full w-16 bg-black text-white flex flex-col items-center py-4 space-y-4 transition-width duration-300 overflow-hidden">
+    <button id="togglekabutton" onclick="togglingsidebar()" class="text-white bg-black text-lg">
+        
+        <i id="togglekaicon" class="fas fa-chevron-right"></i>
+    </button>
+    
+    <div class="w-full flex justify-center mb-4">
+        <span class="bg-white text-black rounded-full w-10 h-10 flex items-center justify-center text-sm font-bold">1</span>
+    </div>
+    <div class="sidebarkacontent px-4 text-white">
+        
+        <h3>Journey Board</h3>
+        <p class="mt-4 font-bold text-black">Explore the world of management</p>
+        <ul class="text-black mt-2">
+            <li>1. Technical Project Management</li>
+            <li>2. Threadbuild</li>
+            <li>3. Structure your Pointers</li>
+            <li>4. 4SA Method</li>
+        </ul>
+    </div>
+</aside>
+<!-- Ye Navbar Hai -->
+<header class="bg-gray-200 p-4 pl-20 flex items-center justify-between">
+    <div class="flex items-center">
+        <img src="https://deepthought.education/assets/images/logo/logo.svg" alt="Logo" class="w-100 h-10 rounded-full mr -2">
+    </div>
+    <div class="flex items-center space-x-4">
+        <i class="fas fa-question-circle text-gray-700 text-lg"></i>
+        <i class="fas fa-user-friends text-gray-700 text-lg"></i>
+        <i class="fas fa-user-circle text-gray-700 text-lg"></i>
+    </div>
+</header>
+
+<!-- Ye Main Content Hai -->
+<main class="flex-1 p-8 pl-24">
+    
+    <div class="bg-gray-200 p-6 rounded-md mb-8" id="project-info"></div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="assetskacontainer"></div>
+</main>
+
+
+<aside class="fixed right-0 top-24 bg-black text-white text-xs py-2 px-4 transform -rotate-90 origin-top-right">
+    Notice Board
+</aside>
+<div class="fixed bottom-10 right-10 flex flex-col space-y-4">
+    <button class="bg-blue-600 text-white rounded-full p-4 shadow-lg">
+        <i class="fas fa-question text-xl"></i>
+    </button>
+    <button class="bg-blue-600 text-white rounded-full p-4 shadow-lg">
+        <i class="fas fa-user-friends text-xl"></i>
+    </button>
+    <button class="bg-blue-600 text-white rounded-full p-4 shadow-lg">
+        <i class="fas fa-calendar-alt text-xl"></i>
+    </button>
+</div>
+
+<script>
+// Yaha Se Apan JSON Data Lete
+const projectKaData = {
+    "title": "Technical Project Management",
+    "short_description": "You can learn project management by applying the simple methods of project management. How you can apply project management in each and every step of your deliverables? Let's figure it out together",
+    "tasks": [
+        {
+            "task_id": 18882,
+            "task_title": "Explore the world of management",
+            "task_description": "As a project manager, you play an important role in leading a project through initiation, planning, execution, monitoring, controlling and completion. How? Do you want to manage each and every step of your life?",
+            "assets": [
+                {
+                    "asset_id": 18883,
+                    "asset_title": "Technical Project Management",
+                    "asset_description": "Story of Alignment\nScope of Agility\nSpecific Accountable\nStaggering Approach\n",
+                    "asset_content": "https://www.youtube.com/embed/TiMRwri1xJ8",
+                    "asset_content_type": "video"
+                },
+                {
+                    "asset_id": 18884,
+                    "asset_title": "Threadbuild",
+                    "asset_description": "Watch the video and thread build, jot out key threads while watching that video.",
+                    "asset_content_type": "threadbuilder"
+                },
+                {
+                    "asset_id": 18885,
+                    "asset_title": "Structure your pointers",
+                    "asset_description": "Write a 400-500 word article, from your thread. Publish your understanding, and showcase your learning to the entire world.",
+                    "asset_content_type": "article"
+                },
+                {
+                    "asset_id": 18886,
+                    "asset_title": "4SA Method",
+                    "asset_description": "A brief overview of the 4SA Method, its application in project management.",
+                    "asset_content_type": "4sa-method"
+                }
+            ]
+        }
+    ]
+};
+
+// Project Info ko use karne
+document.getElementById('project-info').innerHTML = `
+    <h1 class="text-blue-600 text-3xl font-semibold">${projectKaData.title}</h1>
+    <p class="text-gray-700 mt-2 font-medium">${projectKaData.short_description}</p>
+`;
+
+// ye funtion Asset container create karta hai
+function createAssetContainer(asset) {
+    let assetContent;
+    if (asset.asset_content_type === "video") {
+        assetContent = `<iframe src="${asset.asset_content}" class="w-full h-80 rounded-md" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+    } else if (asset.asset_content_type === "article") {
+        assetContent = `
+             <div class="p-4">
+        <label class="text-gray-900 font-semibold block mb-1">Title</label>
+        <input type="text" class="w-full border border-gray-300 rounded-md p-2 bg-gray-100 focus:outline-none" placeholder="Enter article title...">
+    </div>
+    <div class="p-4">
+        <label class="text-gray-900 font-semibold block mb-1">Content </label>
+        <div class="border border-gray-300 rounded-md bg-white">
+            <div class="flex justify-between items-center bg-gray-100 p-2 border-b">
+                <div class="flex space-x-2 text-gray-600 text-sm">
+                    <span>File</span>
+                    <span>Edit</span>
+                    <span>View</span>
+                    <span>Insert</span>
+                    <span>Format</span>
+                    <span>Tools</span>
+                    <span>Table</span>
+                    <span>Help</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button class="text-gray-600 hover:text-gray-900"><i class="fas fa-undo"></i></button>
+                    <button class="text-gray-600 hover:text-gray-900"><i class="fas fa-redo"></i></button>
+                    <button class="text-gray-600 hover:text-gray-900"><i class="fas fa-expand"></i></button>
+                    <select class="border border-gray-300 rounded-md p-1 text-gray-600 text-sm focus:outline-none bg-white">
+                        <option>Paragraph</option>
+                        <option>Heading</option>
+                    </select>
+                    <button class="text-gray-600 hover:text-gray-900"><i class="fas fa-ellipsis-h"></i></button>
+                </div>
+            </div>
+            <textarea class="w-full h-48 p-4 text-gray-700 text-sm bg-gray-50 focus:outline-none" placeholder="Write your article here..."></textarea>
+        </div>
+    </div>
+        `;
+    } else if (asset.asset_content_type === "threadbuilder") {
+        assetContent = `
+            <div class="p-6 bg-gray-50">
+        <div class="flex items-center justify-between mb-4 bg-gray-100 p-2 rounded-md">
+            <h3 class="font-bold text-gray-800">Thread A</h3>
+            <i class="fas fa-chevron-down text-gray-700"></i>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 mb-4">
+
+            <div>
+                <label class="text-gray-500 block text-sm mb-1">Sub Thread 1</label>
+                <textarea class="border rounded-md w-full p-3 h-24 text-sm bg-gray-100 focus:outline-none" placeholder="Enter Text Here"></textarea>
+            </div>
+
+            <div>
+                <label class="text-gray-500 block text-sm mb-1">Sub Interpretation 1</label>
+                <textarea class="border rounded-md w-full p-3 h-24 text-sm bg-gray-100 focus:outline-none" placeholder="Enter Text Here"></textarea>
+            </div>
+
+        </div>
+
+        <div class="flex items-center space-x-4 mb-4 text-gray-600">
+            <i class="fas fa-lightbulb hover:text-gray-900 cursor-pointer"></i>
+            <i class="fas fa-comments hover:text-gray-900 cursor-pointer"></i>
+            <i class="fas fa-download hover:text-gray-900 cursor-pointer"></i>
+            
+            <select class="border rounded-md p-2 text-sm focus:outline-none bg-white">
+                <option>Select Category</option>
+            </select>
+
+            <select class="border rounded-md p-2 text-sm focus:outline-none bg-white">
+                <option>Select Process</option>
+            </select>
+        </div>
+
+        <button class="bg-blue-600 text-white rounded-full px-4 py-2 text-sm hover:bg-blue-700 mb-4">
+            + Sub thread
+        </button>
+
+        <h4 class="font-semibold text-gray-800 mb-2">Summary for Thread A</h4>
+        <textarea class="border rounded-md w-full p-3 h-24 text-sm bg-gray-100 focus:outline-none" placeholder="Enter summary here..."></textarea>
+
+    </div>
+        `;
+    } else if (asset.asset_content_type === "4sa-method") {
+        assetContent = `
+            <div class="w-full max-w-2xl bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200">
+
+    <div class="bg-black text-white p-4 flex justify-between items-center">
+        <h2 class="text-center font-semibold text-lg">4SA Method</h2>
+        <i class="fas fa-info-circle"></i>
+    </div>
+
+    <div class="p-4 border-b border-gray-200">
+        <p class="font-semibold text-gray-900">Description:</p>
+        <p class="text-gray-700">To explore more read more</p>
+    </div>
+
+    <div class="p-4 border-b border-gray-200">
+        <button onclick="toggleContent('intro-content')" class="w-full flex justify-between items-center text-left font-semibold text-gray-900">
+            <span>Introduction</span>
+            <i class="fas fa-angle-down"></i>
+        </button>
+        <div id="intro-content" class="toggle-content mt-2 text-gray-700">
+            <p>The 4SA Method, How to bring an idea into process?</p>
+            <button class="text-blue-600 mt-2">See more</button>
+        </div>
+    </div>
+
+    <div class="p-4 border-b border-gray-200">
+        <button onclick="toggleContent('threadA-content')" class="w-full flex justify-between items-center text-left font-semibold text-gray-900">
+            <span>Thread A</span>
+            <i class="fas fa-angle-down"></i>
+        </button>
+        <div id="threadA-content" class="toggle-content mt-2 text-gray-700">
+            <p>How are you going to develop your strategy? Which method are you going to use to develop a strategy? What if the project is lengthy?</p>
+            <button class="text-blue-600 mt-2">See more</button>
+
+            <div class="mt-4 p-4 bg-gray-100 rounded-md">
+                <button onclick="toggleContent('example1-content')" class="w-full flex justify-between items-center text-left font-semibold text-gray-900">
+                    <span>Example 1</span>
+                    <i class="fas fa-angle-down"></i>
+                </button>
+                <div id="example1-content" class="toggle-content mt-2 text-gray-700">
+                    <p>You have a concept; how will you put it into practice?</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+        `;
+    }
+
+    return `
+        <div class="bg-white rounded-lg shadow-md p-4 border">
+            <div class="flex justify-between items-center mb-2">
+                <h2 class="font-semibold text-gray-800">${asset.asset_title}</h2>
+                <i class="fas fa-chevron-down text-gray-700"></i>
+            </div>
+            <p class="text-sm text-gray-600 mb-4">${asset.asset_description}</p>
+            ${assetContent}
+        </div>
+    `;
+}
+
+//Asset Containers ko fill karne
+const assetsContainer = document.getElementById('assetskacontainer');
+projectKaData.tasks[0].assets.forEach(asset => {
+    assetsContainer.innerHTML += createAssetContainer(asset);
+});
+
+
+function toggle4SAMethod(button) {
+    const details = button.nextElementSibling;
+    details.classList.toggle('hidden');
+}
+function togglingsidebar() {
+        const sidebar = document.getElementById('sidebarcollapse');
+        const toggleIcon = document.getElementById('togglekaicon');
+
+        sidebar.classList.toggle('expanded');
+
+        if (sidebar.classList.contains('expanded')) {
+            toggleIcon.classList.remove('fa-chevron-right');
+            toggleIcon.classList.add('fa-chevron-left');
+            sidebar.style.width = "200px"; 
+        } else {
+            toggleIcon.classList.remove('fa-chevron-left');
+            toggleIcon.classList.add('fa-chevron-right');
+            sidebar.style.width = "64px"; 
+        }
+    }
+
+</script>
+
+</body>
+</html> ⬤
